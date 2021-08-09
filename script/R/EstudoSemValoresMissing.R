@@ -13,10 +13,10 @@ library(ggplot2)
 library(tidyr)
 options(scipen = 999)
 
-# load data using MacOS
+# Função utilizada para carregar dataset no Sistema MacOS
 realstate <- fread("properati-BR-2016-11-01-properties-sell.csv")
 
-# data characteristics
+# características do dataset
 names(realstate)
 head(realstate)
 tail(realstate)
@@ -44,7 +44,7 @@ realstate <- subset(realstate, select = -c( geonames_id,
 realstate <- subset(realstate, select = -drops)
 # *******************************************************************
 
-# Remove all useless columns -> MacOS
+# Remoção de todas as colunas insignificantes -> MacOS
 realstate$geonames_id <- NULL
 realstate$`lat-lon` <- NULL
 realstate$lat <- NULL
@@ -60,31 +60,38 @@ realstate$operation <- NULL
 
 ?separate
 
-#Separate the column place_with_parent_names;
+# Criando as colunas País, Estado, Cidade e Bairro através da separação
+# da variável "place_with_parent_names"
 realstate <- realstate %>%
   separate(place_with_parent_names, into = c("1", "Pais", "Estado", "Cidade", "Bairro"), "\\|")
 
-# Remove column 1
+# Remoção da Coluna 1
 realstate$`1` <- NULL
 
-# missing values by columns - total
+# Somatória dos valores missing por colunas
 sapply(realstate, function(x) sum(is.na(x)))
 
-# missing values by columns - percentage
+# Porcentagem dos valores missing por colunas
 sapply(realstate, function(x) mean(is.na(x))*100)
 
 
-# calculate price/m2
+# Cálculo price/m2
 # *******************************************************************
 realstate$price_calc <- realstate$price / realstate$surface_total_in_m2
 head(realstate)
 
-# calculate the same price using the attribute surface_covered_in_m2
+# O cálculo do preço por metro quadrado realizado acima não faz muito sentido
+# uma vez que 75% dos valores da variável "surface_total_in_m2" são NaN.
+# O que pode ser realizado é utilizar a variável "surface_covered_in_m2" ao invés
+# da variável "surface_total_in_m2".
+
+# Cálculo do preço por metro quadrado utilizando o atributo "surface_covered_in_m2".
 realstate$price_calc2 <- realstate$price / realstate$surface_covered_in_m2
 
 # *******************************************************************
 
 
+# Ajuste no nome realizado em Sistemas que não reconhecem o formato utf-8;
 ajustar_nomes=function(x){
   x%>%
     # stringr::str_trim() %>%                        #Remove espaços em branco sobrando
@@ -98,7 +105,7 @@ ajustar_nomes=function(x){
     stringr::str_replace("Ã³", "o")   %>%
     stringr::str_replace("³", "o")   %>%
     stringr::str_replace("Ãº", "u")   %>%
-    stringr::str_replace("Ã�m", "im") 
+    stringr::str_replace("Ã?m", "im") 
   
   
 }
