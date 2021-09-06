@@ -453,32 +453,3 @@ ggplot(df_anual, aes(x = Ano, y = Media, group = Estado)) +
 df_hist <- subset(x = df,
                   select = c(price, price_aprox_local_currency, price_aprox_usd,
                              surface_covered_in_m2, price_usd_per_m2, price_per_m2, rooms))
-
-ggplot(df_hist, aes(x = c(price, price_aprox_local_currency, price_aprox_usd,
-                          surface_covered_in_m2, price_usd_per_m2, price_per_m2, rooms))) +
-  geom_histogram(fill = "white", colour = "blue")
-
-
-
-ggplot(birthwt, aes(x = bwt)) +
-  geom_histogram(fill = "white", colour = "black") +
-  facet_grid(race ~ ., scales = "free")
-
-
-
-
-
-
-
-
-
-myplots <- list()  # new empty list
-for(i in 1:ncol(mtcars)){
-  col <- names(mtcars)[i]
-  ggp <- ggplot(mtcars, aes_string(x = col)) +
-    geom_histogram(bins = 30, fill = "cornflowerblue", color = "black") +
-    geom_vline(xintercept = mean(mtcars[[col]]), col = "red", lwd=1.5) 
-  myplots[[i]] <- ggp  # add each plot into plot list
-}
-
-multiplot(plotlist = myplots, cols = 3)
